@@ -6,10 +6,9 @@ def CheckEvents(player_):
         if event.type == pg.QUIT:
             player_.running = False
         if event.type ==  pg.MOUSEBUTTONDOWN:
-            if event.button == 1: ## работает
+            if event.button == 1:
                 player_.click_qution += 10
-                player_.score_ += 1 * player_.click_qution
-                player_.auto_clicks_ += 10
+                player_.score_ += player_.click_qution
             elif event.button == 3:
                 (x, y) = pg.mouse.get_pos()
                 if x >= 1000 and y >= 600:
@@ -22,11 +21,9 @@ def CheckEvents(player_):
                         player_.MoneyErrortime = 30
 
     Keys = pg.key.get_pressed()
-    if Keys[pg.K_SPACE] or Keys[pg.K_LEFT] or Keys[pg.K_RIGHT]:
-        player_.score_ += 1 * player_.click_qution
-        player_.score_ += 1 * player_.click_qution
-
+    if Keys[pg.K_SPACE]:
+        player_.score_ += player_.click_qution
 
 def Update(player_):
-    player_.score_ += (max(1, player_.auto_clicks_ // 30))
+    player_.score_ += (player_.auto_clicks_)
     return

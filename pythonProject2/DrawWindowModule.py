@@ -15,15 +15,13 @@ def MakeAutoClickTitle(autoclicks, fontTitle):
     return (AutoClickTitle, AutoRect)
 
 def MakeBonus(bonus, ImageRect, Title):
-    Bonus = Title.render(f"+{bonus} Clicks/sec", True, RED)
-    BonusRect = Bonus.get_rect()
-    BonusRect.center = (WIDTH - 70, HEIGHT // 2 - 200)
+    Bonus = Title.render(bonus, True, RED)
+    BonusRect = (ImageRect[0] - 50, ImageRect[1] + 70)
     return (Bonus, BonusRect)
 
 def MakePrice(price, ImageRect, Title):
     Price = Title.render(f"Coast: {price}", True, RED)
-    PriceRect = Price.get_rect()
-    PriceRect.center = (WIDTH - 70, HEIGHT // 2 - 290)
+    PriceRect = (ImageRect[0] - 50, ImageRect[1] - 10)
     return (Price, PriceRect)
 
 def print_text(str, Screen, Title):
