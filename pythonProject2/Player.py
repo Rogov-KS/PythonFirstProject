@@ -1,30 +1,38 @@
 import pygame as pg
+import DrawWindowModule as Draw
+import GlobalVariable as Global
 
-import DrawWindowModule
-from GlobalVariable import *
+
+load = pg.image.load
+set_scale = pg.transform.scale
+
 
 class PlayerClass:
     def __init__(self):
         self.score_ = 0
         self.auto_clicks_ = 0
-        self.click_qution = 1
-        self.auto_click_qution = 1
+        self.click_quotient = 1
+        self.auto_click_quotient = 1
         self.running = True
         self.in_store_ = False
-        self.MoneyErrortime = 0
+        self.money_error_time = 0
 
     def __call__(self, *args, **kwargs):
         return 1
-    def AddScore(self, sum):
-        self.score_ += sum
-    def AddAutoClicks(self, sum):
-        self.auto_clicks_ += sum
-    # def Draw(self, win):
+
+    def add_score(self, sum_):
+        self.score_ += sum_
+
+    def add_auto_clicks(self, sum_):
+        self.auto_clicks_ += sum_
 
 
-StoreBackGround = pg.transform.scale(pg.image.load('Pictures/StoreImages/QRYxzCA.jpeg').convert(), (100, 500))
+name = 'Pictures/StoreImages/StoreBackground.jpeg'
+StoreBackGround = load(name).convert()
+StoreBackGround = set_scale(StoreBackGround, (100, 500))
 StoreBackRect = StoreBackGround.get_rect()
-StoreBackRect.topright = (WIDTH, HEIGHT // 2 - 300)
+StoreBackRect.topright = (Global.WIDTH, Global.HEIGHT // 2 - 300)
+
 
 class Item:
     def __init__(self, img, cost, ability):
@@ -32,29 +40,40 @@ class Item:
         self.cost_ = cost
         self.ability_ = ability
 
-    def draw(self, Screen, rect):
-        Screen.blit(self.img_, rect)
-        Screen.blit(*DrawWindowModule.MakePrice(self.cost_, rect, FontTitle))
-        Screen.blit(*DrawWindowModule.MakeBonus(self.ability_, rect, FontTitle))
+    def draw(self, screen, rect):
+        screen.blit(self.img_, rect)
+        screen.blit(*Draw.make_price(
+            self.cost_, rect, Global.FontTitle))
+        screen.blit(*Draw.make_bonus(
+            self.ability_, rect, Global.FontTitle))
 
 
-LightSaber = pg.transform.scale(pg.image.load('Pictures/StoreImages/+Saber.png').convert_alpha(StoreBackGround), (75, 75))
+name = 'Pictures/StoreImages/Saber.png'
+light_saber = load(name).convert_alpha()
+light_saber = set_scale(light_saber, (75, 75))
+light_saber = Item(light_saber, 2000, "+100 auto clicks per sec")
 
-LightSaber = Item(LightSaber, 2000, "+100 autoclicks per sec")
+name = 'Pictures/StoreImages/SpaceShip.png'
+empire_ship = load(name).convert_alpha()
+empire_ship = set_scale(empire_ship, (75, 75))
+empire_ship = Item(empire_ship, 3000, "*50 click quotient")
 
-EmpireShip = pg.transform.scale(pg.image.load('Pictures/StoreImages/SpaceShip.png').convert_alpha(StoreBackGround), (75, 75))
-EmpireShip = Item(EmpireShip, 3000, "*50 click qution")
+name = 'Pictures/StoreImages/LegendaryShip.png'
+legendary_ship = load(name).convert_alpha()
+legendary_ship = set_scale(legendary_ship, (75, 75))
+legendary_ship = Item(legendary_ship, 5000, "+228 force power")
 
-LegendaryShip = pg.transform.scale(pg.image.load('Pictures/StoreImages/LegendarySpaceShip.png').convert_alpha(StoreBackGround), (75, 75))
-LegendaryShip = Item(LegendaryShip, 5000, "+228 force power")
 
 class Store:
     def __init__(self):
         self.img_ = (StoreBackGround, StoreBackRect)
-        self.items_ = [LightSaber, LightSaber, EmpireShip, EmpireShip, LegendaryShip]
-    def draw(self, Screen):
-        Screen.blit(*self.img_)
+        self.items_ = [light_saber, light_saber,
+                       empire_ship, empire_ship,
+                       legendary_ship]
+
+    def draw(self, screen):
+        screen.blit(*self.img_)
         for i in range(min(5, len(self.items_))):
             cord = self.img_[1].topleft
             cord = (cord[0] + 12, cord[1] + 17 + 100 * i)
-            self.items_[i].draw(Screen, cord)
+            self.items_[i].draw(screen, cord)

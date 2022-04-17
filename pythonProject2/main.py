@@ -1,70 +1,73 @@
-import random
-import math
 import sys
 import pygame as pg
-import UpdateAndCheck as UC
-from GlobalVariable import *
-import Store
+import UpdateAndCheck as Uc
+import GlobalVariable as Global
 import Player
-import DrawWindowModule
+import DrawWindowModule as Draw
 
 
 clock = pg.time.Clock()
-# Surface = pg.Surface([640,480], pg.SRCALPHA, 32)
-
-
-BackGroundImage = pg.image.load('Pictures/DeathStar.png').convert()
-BackGroundImage = pg.transform.scale(BackGroundImage, (WIDTH, HEIGHT))
-rect = BackGroundImage.get_rect()
-rect.center = (600, 350)
-DarthVaderImage = pg.image.load('Pictures/DarthVader/darth-vader-sheev-palpatine-luke-skywalker-r2-d2-general-grievous-png-favpng-c6SHfMDgB0T3zkcZQt9Vep1DF.jpg').convert_alpha()
-DarthVaderImage = pg.transform.scale(DarthVaderImage, (400, 500))
-Vader_rect = DarthVaderImage.get_rect()
-Vader_rect.center = (600, 500)
-
-BitcoinImage = pg.transform.scale(pg.image.load('Pictures/unnamed.png').convert_alpha(), (50, 50))
-BitcoinRect = BitcoinImage.get_rect()
-BitcoinRect.center = (50, 25)
-
-StoreIconImage = pg.transform.scale(pg.image.load('Pictures/Store.png').convert_alpha(), (200, 150))
-StoreIconRect = StoreIconImage.get_rect()
-StoreIconRect.topleft = (1000, 600)
-
-Screen.blit(BackGroundImage, rect)
-
+Screen = Global.Screen
+load = pg.image.load
+set_scale = pg.transform.scale
 
 player_ = Player.PlayerClass()
 store = Player.Store()
 
-def DrawGeneralWin(player_):
+BackGroundImage = load('Pictures/DeathStar.png').convert()
+BackGroundImage = set_scale(BackGroundImage, (Global.WIDTH, Global.HEIGHT))
+rect = BackGroundImage.get_rect()
+rect.center = (600, 350)
+DarthVaderImage = load('Pictures/Vader.png').convert_alpha()
+DarthVaderImage = set_scale(DarthVaderImage, (400, 500))
+Vader_rect = DarthVaderImage.get_rect()
+Vader_rect.center = (550, 500)
+
+BitcoinImage = load('Pictures/Bitcoin.png').convert_alpha()
+BitcoinImage = set_scale(BitcoinImage, (50, 50))
+BitcoinRect = BitcoinImage.get_rect()
+BitcoinRect.center = (50, 35)
+
+StoreIconImage = load('Pictures/Store.png').convert_alpha()
+StoreIconImage = set_scale(StoreIconImage, (200, 150))
+StoreIconRect = StoreIconImage.get_rect()
+StoreIconRect.topleft = (980, 600)
+
+Screen.blit(BackGroundImage, rect)
+
+
+def draw_general_win(player_):
     Screen.blit(BackGroundImage, rect)
     Screen.blit(DarthVaderImage, Vader_rect)
     Screen.blit(BitcoinImage, BitcoinRect)
 
-    Screen.blit(*DrawWindowModule.MakeScoreTitle(int(player_.score_), FontTitle))
-    Screen.blit(*DrawWindowModule.MakeAutoClickTitle(player_.auto_clicks_, FontTitle))
+    Screen.blit(*Draw.make_score_title(
+        int(player_.score_), Global.FontTitle))
+    Screen.blit(*Draw.make_auto_click_title(
+        player_.auto_clicks_, Global.FontTitle))
     Screen.blit(StoreIconImage, StoreIconRect)
 
 
-def DrawWindow(player_):
-    DrawGeneralWin(player_)
+def draw_window(player_):
+    draw_general_win(player_)
 
     if player_.in_store_:
         store.draw(Screen)
 
-    if(player_.MoneyErrortime):
-        player_.MoneyErrortime -= 1
-        DrawWindowModule.print_text("You haven't enough money", Screen, FontTitle)
+    if player_.money_error_time:
+        player_.money_error_time -= 1
+        Draw.print_text("You haven't enough money",
+                        Screen, Global.FontTitle)
 
     pg.display.update()
 
 
 while player_.running:
-    clock.tick(FPS)
+    clock.tick(Global.FPS)
 
-    UC.CheckEvents(player_)
-    UC.Update(player_)
-    DrawWindow(player_)
+    Uc.check_events(player_)
+    Uc.update(player_)
+    draw_window(player_)
 
 pg.quit()
 sys.exit()
